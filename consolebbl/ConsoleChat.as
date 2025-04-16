@@ -3,6 +3,7 @@ package consolebbl
    import bbl.GlobalProperties;
    import flash.events.Event;
    import flash.media.SoundTransform;
+   import flash.net.SharedObject;
    import net.ParsedMessageEvent;
    import net.SocketMessage;
    
@@ -131,7 +132,11 @@ package consolebbl
       
       public function addLocalMessage(param1:String) : *
       {
-         new BipChat().play(0,0,new SoundTransform(0.5));
+         var prefs:SharedObject = SharedObject.getLocal("consolebblPrefs");
+         if(prefs.data.bipModoChat !== false)
+         {
+            new BipChat().play(0,0,new SoundTransform(0.5));
+         }
          this.consoleChatMsgList.push(param1);
          this.consoleChatMsgList.splice(0,this.consoleChatMsgList.length - 80);
          this.dispatchEvent(new Event("chatChangeText"));
