@@ -7,7 +7,9 @@ package consolebbl.application
    import flash.display.SimpleButton;
    import flash.events.Event;
    import flash.events.KeyboardEvent;
+   import flash.events.MouseEvent;
    import flash.events.TextEvent;
+   import flash.net.SharedObject;
    import flash.text.StyleSheet;
    import flash.text.TextField;
    import ui.ValueSelector;
@@ -30,6 +32,8 @@ package consolebbl.application
       public var vs_selgrade:ValueSelector;
       
       private var lastModoLine:int;
+      
+      private var prefs:SharedObject;
       
       public function ConsoleChatApp()
       {
@@ -57,6 +61,12 @@ package consolebbl.application
       {
          if(stage)
          {
+            prefs = SharedObject.getLocal("consolebblPrefs");
+            var playBip:Boolean = prefs.data.bipModoChat !== false;
+            trace("Valeur de playBip : " + playBip);
+            ch_modochat.gotoAndStop(2);
+            ch_modochat.buttonMode = true;
+            ch_modochat.addEventListener(MouseEvent.CLICK,toggleBipChat);
             Object(parent).resizer.visible = true;
             this.removeEventListener(Event.ADDED,this.init,false);
             GlobalProperties.stage.addEventListener(KeyboardEvent.KEY_DOWN,this.onKeyDownEvt,false,0,true);
@@ -74,6 +84,21 @@ package consolebbl.application
             this.vs_selgrade.addEventListener("onChanged",this.chatChangeUser,false,0,true);
             this.vs_selgrade.maxValue = Math.pow(2,GlobalProperties.BIT_GRADE) - 1;
             this.vs_selgrade.value = 0;
+         }
+      }
+      
+      private function toggleBipChat(e:MouseEvent) : void
+      {
+         var isChecked:Boolean = ch_modochat.currentFrame == 1;
+         ch_modochat.gotoAndStop(isChecked ? 2 : 1);
+         prefs.data.bipModoChat = isChecked;
+         try
+         {
+            prefs.flush();
+         }
+         catch(err:Error)
+         {
+            trace("Erreur lors de la sauvegarde de la préférence : " + err.message);
          }
       }
       
