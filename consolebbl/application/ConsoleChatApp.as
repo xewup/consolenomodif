@@ -61,12 +61,6 @@ package consolebbl.application
       {
          if(stage)
          {
-            prefs = SharedObject.getLocal("consolebblPrefs");
-            var playBip:Boolean = prefs.data.bipModoChat !== false;
-            trace("Valeur de playBip : " + playBip);
-            ch_modochat.gotoAndStop(2);
-            ch_modochat.buttonMode = true;
-            ch_modochat.addEventListener(MouseEvent.CLICK,toggleBipChat);
             Object(parent).resizer.visible = true;
             this.removeEventListener(Event.ADDED,this.init,false);
             GlobalProperties.stage.addEventListener(KeyboardEvent.KEY_DOWN,this.onKeyDownEvt,false,0,true);
@@ -84,6 +78,12 @@ package consolebbl.application
             this.vs_selgrade.addEventListener("onChanged",this.chatChangeUser,false,0,true);
             this.vs_selgrade.maxValue = Math.pow(2,GlobalProperties.BIT_GRADE) - 1;
             this.vs_selgrade.value = 0;
+            prefs = SharedObject.getLocal("consolebblPrefs");
+            var playBip:Boolean = prefs.data.bipModoChat !== false;
+            trace("Valeur de playBip : " + playBip);
+            ch_modochat.gotoAndStop(2);
+            ch_modochat.buttonMode = true;
+            ch_modochat.addEventListener(MouseEvent.CLICK,toggleBipChat);
          }
       }
       
